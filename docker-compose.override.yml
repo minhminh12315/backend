@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  auth-service:
+    command: >
+      sh -c "echo 'Waiting for postgres...' &&
+             while ! nc -z $$DB_HOST $$DB_PORT; do
+               sleep 0.1
+             done &&
+             echo 'PostgreSQL started' &&
+             sleep 2 &&
+             python manage.py makemigrations &&
+             python manage.py migrate &&
+             gunicorn auth_service.wsgi:application --bind 0.0.0.0:8000"
