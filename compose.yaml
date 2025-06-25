@@ -61,18 +61,19 @@ services:
       context: ./product_service
       dockerfile: Dockerfile
     volumes:
-      - ./product_service:/app
+      - ./product_service:/app:cached
+      - ./product_service/staticfiles:/app/staticfiles
     ports:
       - "8001:8001"
     environment:
       - DEBUG=1
-      - DBHOST=postgres_product
-      - DBNAME=product_db
-      - DBUSER=postgres
-      - DBPASSWORD=${POSTGRES_PASSWORD}
-      - DBPORT=5432
+      - DB_HOST=postgres_product
+      - DB_NAME=product_db
+      - DB_USER=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_PORT=5432
       - SECRET_KEY=${SECRET_KEY}
-      - API_VERSION=v1
+      - VERSIONAPI=v1
       - CORS_ALLOW_ALL_ORIGINS=True
     depends_on:
       postgres_product:
