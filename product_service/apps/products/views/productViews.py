@@ -33,7 +33,6 @@ class GetAllVariantView(ListAPIView):
         return Response(response, status=status.HTTP_200_OK)
     
 class GetRecommandProductsView(ListAPIView):
-    queryset = Variant.objects.all()
     serializer_class = VariantSerializer
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -43,12 +42,37 @@ class GetRecommandProductsView(ListAPIView):
         return recommandProducts
 
     def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        response = {
-            'status': 200,
-            'message': 'Products retrieved successfully',
-            'code': "SUCCESS",
-            'data': serializer.data
-        }
-        return Response(response, status=status.HTTP_200_OK)
+        try:
+            queryset = self.filter_queryset(self.get_queryset())
+            serializer = self.get_serializer(queryset, many=True)
+            response = {
+                'status': 200,
+                'message': 'Products retrieved successfully',
+                'code': "SUCCESS",
+                'data': serializer.data
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'status': 500, 'message': str(e), 'code': "ERROR"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+class GetVariantBySku(RetrieveAPIView):
+    queryset = Variant.objects.all()
+    serializer_class = VariantSerializer
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get(self, request, *args, **kwargs):
+        sku = kwargs.get('sku')
+        print(sku)
+        try:
+            variant = self.queryset.get(sku__iexact=sku)
+            serializer = self.get_serializer(variant)
+            response = {
+                'status': 200,
+                'message': 'Variant retrieved successfully',
+                'code': "SUCCESS",
+                'data': serializer.data
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except Variant.DoesNotExist:
+            return Response({'status': 404, 'message': 'Variant not found', 'code': "NOT_FOUND"}, status=status.HTTP_404_NOT_FOUND)
