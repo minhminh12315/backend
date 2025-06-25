@@ -12,15 +12,14 @@ services:
              python manage.py makemigrations &&
              python manage.py migrate &&
              gunicorn auth_service.wsgi:application --bind 0.0.0.0:8000"
-
   product-service:
-    command: >
-      sh -c "echo 'Waiting for postgres_product...' &&
-             while ! nc -z $$DB_HOST $$DB_PORT; do
-               sleep 0.1
-             done &&
-             echo 'PostgreSQL started' &&
-             sleep 2 &&
-             python manage.py makemigrations &&
-             python manage.py migrate &&
-             gunicorn product_service.wsgi:application --bind 0.0.0.0:8000"
+      command: >
+        sh -c "echo 'Waiting for postgres_product...' &&
+              while ! nc -z $$DBHOST $$DBPORT; do
+                sleep 0.1
+              done &&
+              echo 'PostgreSQL started' &&
+              sleep 2 &&
+              python manage.py makemigrations &&
+              python manage.py migrate &&
+              gunicorn product_service.wsgi:application --bind 0.0.0.0:8001"
