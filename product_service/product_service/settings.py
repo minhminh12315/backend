@@ -79,11 +79,11 @@ WSGI_APPLICATION = 'product_service.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DBNAME'),
-        'USER': config('DBUSER'),
-        'PASSWORD': config('DBPASSWORD'),
-        'HOST': 'localhost', 
-        'PORT': config('DBPORT', default='5432'),
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
 
@@ -134,3 +134,5 @@ MEDIA_URL = '/media/'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
