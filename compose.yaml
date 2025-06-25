@@ -56,6 +56,30 @@ services:
     networks:
       - gozic-network
 
+  product-service:
+    build: 
+      context: ./product_service
+      dockerfile: Dockerfile
+    volumes:
+      - ./product_service:/app
+    ports:
+      - "8001:8001"
+    environment:
+      - DEBUG=1
+      - DBHOST=postgres_product
+      - DBNAME=product_db
+      - DBUSER=postgres
+      - DBPASSWORD=${POSTGRES_PASSWORD}
+      - DBPORT=5432
+      - SECRET_KEY=${SECRET_KEY}
+      - API_VERSION=v1
+      - CORS_ALLOW_ALL_ORIGINS=True
+    depends_on:
+      postgres_product:
+        condition: service_healthy
+    networks:
+      - gozic-network
+
 volumes:
   postgres_data:
   postgres_product_data:
